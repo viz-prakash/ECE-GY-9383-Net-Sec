@@ -28,11 +28,16 @@ For each category of issues results are below:
 
 2. For encryption in IoT devices - we are able to characterize some commong ports used by devices. Some interesting ports we found are ... 
 
-3. For external communication - we have found a lot of devices exposing ports to the Internet and these ports are accessed by the hosts on Internet. 
+3. For external communication - we have found a lot of devices exposing ports to the Internet and these ports are getting accessed by the hosts on Internet. 
 
-## Next step
+The above chart shows the external communication between device local port and remote ports on used by hosts on the Internet. The listed device port  It also shows the breakdown of user assigned labels of IoT devices using that local port. In the above chart, port 123 is communicating with only 4 remote ports, in fact, 36178 flows out of total 36180 flows that are going out of this port are going to port 123, which clearly indicates that devices using this port are not acting as a server. As port 123 is used by NTP, where both client and server use this port, which mathces our hypothesis. 
 
-For each category we plan to do take these steps:
+Where as port 443, 80, and 8080 are talking with large number of different remote ports -- indicating that these connections are initiated by remote hosts on the Internet as for TCP/UDP connection client randomly selects port to talk to the server at a fixed port.
+ 
+
+## Next steps
+
+For each category we plan to take these steps:
 
 1. Extact out a list of devices that have shown evidence of port scanning.
 
