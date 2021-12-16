@@ -30,10 +30,32 @@ For each category of issues results are below:
 
 3. For external communication - we have found a lot of devices exposing ports to the Internet and these ports are getting accessed by the hosts on Internet. 
 
-The above chart shows the external communication between device local port and remote ports on used by hosts on the Internet. The listed device port  It also shows the breakdown of user assigned labels of IoT devices using that local port. In the above chart, port 123 is communicating with only 4 remote ports, in fact, 36178 flows out of total 36180 flows that are going out of this port are going to port 123, which clearly indicates that devices using this port are not acting as a server. As port 123 is used by NTP, where both client and server use this port, which mathces our hypothesis. 
+The below chart shows the external communication between device local port and remote ports used by hosts on the Internet. It also shows the breakdown of user assigned labels of IoT devices using that local port. In the chart, port 123 is communicating with only 4 remote ports, in fact, 36178 flows out of total 36180 flows that are going out of this port are going to port 123, which clearly indicates that devices using this port are not acting as a server. As port 123 is used by NTP, where both client and server use this port, which mathces our hypothesis. Port 443, 80, 8080, and 22 are communicating with large number of different remote ports.
 
-Where as port 443, 80, and 8080 are talking with large number of different remote ports -- indicating that these connections are initiated by remote hosts on the Internet as for TCP/UDP connection client randomly selects port to talk to the server at a fixed port.
- 
+![alt text](output_files/plots/external_comm_sankey_plot.png)
+*External communication wrt. device local ports and device stream flow. Device local ports are in the middle and devices are on left and remote port on right.*
+
+
+Below charts are breakdown of number flows remote ports contribute to a port for few interesting ports. 
+
+![alt text](/output_files/plots/external_comm/images/external_comm_for_123.svg)
+*Number of remote ports communicating with device local port 123 on left and number of devices that use port 123 on right.*
+
+![alt text](/output_files/plots/external_comm/images/external_comm_for_443.svg)
+*Number of remote ports communicating with device local port 443 on left and number of devices that use port 443 on right.*
+
+![alt text](/output_files/plots/external_comm/images/external_comm_for_80.svg)
+*Number of remote ports communicating with device local port 80 on left and number of devices that use port 80 on right.*
+
+![alt text](/output_files/plots/external_comm/images/external_comm_for_8080.svg)
+*Number of remote ports communicating with device local port 8080 on left and number of devices that use port 8080 on right.*
+
+![alt text](/output_files/plots/external_comm/images/external_comm_for_22.svg)
+*Number of remote ports communicating with device local port 22 on left and number of devices that use port 22 on right.*
+
+Most of communication on device local port 123 is with remote port 123, where as port 443, 80, 8080, and 25 are communicating with large number of different remote ports -- indicating that these connections are initiated by remote hosts on the Internet, as for TCP/UDP connection client randomly selects port to talk to the server at a fixed port.
+
+For interactive graphs download the respective HTML files from the [directory](/output_files/plots/).
 
 ## Next steps
 
