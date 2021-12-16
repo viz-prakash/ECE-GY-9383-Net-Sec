@@ -64,6 +64,7 @@ Another way to characterize the ports used by devices is by putting them in the 
 
 From this initial analysis, if we have buy devices to analyze their traffic, they would be Amazon devices and analyze their traffic on respective ports:
 |Device | Port (default is source port)|
+|:---:|:---:|
 |Amazon devices: Alexas, Echo, Firestick, Ring, etc | 55444, 55443|
 |Google devices: Google Home, Google Nest, Chromecast, Google WiFi, etc| 10001, 2002, 10101, 8009|
 |Philips Hue and Philips Hue bridge| 80, 443, 1900|
@@ -109,6 +110,7 @@ Below charts are a breakdown of the number of flows remote ports contribute to a
 Most of the communication on device local port 123 is with remote port 123, whereas port 443, 80, 8080, and 25 are communicating with a large number of different remote ports -- indicating that these connections are initiated by remote hosts on the Internet, as for TCP/UDP connection client randomly selects port to talk to the server at a fixed port.
 
 |Device | Port (default is source port)|
+|:---:|:---:|
 |D-Link Camera| 443|
 |Synology DS and NAS| 443|
 |WD NAS | 80|
