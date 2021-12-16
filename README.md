@@ -26,7 +26,60 @@ For each category of issues results are below:
 
 1. For device-to-deivce communication - we haven't figured out a way to find out if a device is doing port scan from IoT Inspector data. This work is still in progress.
 
-2. For encryption in IoT devices - we are able to characterize some commong ports used by devices. Some interesting ports we found are ... 
+2. For encryption in IoT devices - we are able to characterize some commong ports used by devices. By looking at source port of a device and what are the remote ports this source port is communication with can gives us an idea about if port is acting as a server on this port or client. If the number of unique remote ports is large then this device source port is a server -- for TCP/UDP connection client randomly selects port to talk to the server at a fixed port. If we augment this device source port and remote port connection with all the devics using a source port and all the devices using a remote port and see how much connectivity flows from a device using source port to devices using destination, we can characterize the ports used by devices in the home networks for communication. This will help us find out a list af devices which talk with each other and what ports they communicate on. A chart of this is below, using which we can find some of the most chatty devices and pick ones we find interesting for our lab setup. In the lab setup we can monitor their traffic and analyze the communication on interesting ports we find here. From this analysis, some interesting ports we found are -- 55444, 10001, 443, 80, 445, 53, 554, 2002, 8899, 12300, 8009, 10101, 8088, and 1900 -- used by devices on the far left and fart right. 
+
+![alt text](/output_files/plots/device_to_device_comm_sankey_plot.png)
+*Device to device communicattion in IoT devices from the perspective of device local ports to characterize the ports used by devices when they communicate in the local network*
+
+Let's look at the biggest device local port contributor -- port 55444. We can clearly see that this port is used by Amazon based devices for local communication as it's used as both client and server ports -- some of the devices on the far left are: Amazon Alexa, Echo Show 5,  Amazon Echo Dot, Fire stick, Ring Doorbell, etc, where as on the far right side are also Amazon products. Similary, we can conclude that port 2002 is used by a Google deivce. To analyze another port, let's look at the source port 10001. Devices using this as a source port are most Google devices, where as remote ports distinct, large, and very random, which suggest this port act as server on this devices. Client devices talking to a Google port 10001 are: Wyze Cam from fixed port 38622, and few Google devices using fixed ports 46953, 59501, etc. 
+
+Another big contributor source port is 1900. We can tell this port is used by Philips Hue Bridge, Wemo Smart Plug, probably from different clients because there are large number random remote ports. But it also has fixed few fixed ports, which suggests these device are talking on a mutually agreed port which is also an interesting find. 
+
+There are some device and port combination clearly tell us that device is acting as server on that port, for example,  Sonos port 12300, it large number of random remote ports.
+
+Some other interesting ports we can see getting used are 443, 53, and 80. Let's look at port 443, another major contribute on source port side. We can say this port is used Philips Hue as a server and device talking to it is Dyson Fan. We don't list all the device attached remote port keep the graph digestable and readable but if want to find out we could query on our data to find out exact devices talking with Philips Hue on port 443. Port 53 is an interesting find -- becasue we don't expect devices to act as DNS server and query DNS request. Biggest contributor to this port 53 is device named Ambient Weather from port 4096. We can't tell what kind of interaction is this but, this would an good cadidate to put in our lab to anlyze the traffic. Similary from this way of analysis we can tell port 80 is also acting as server on devices like, Philips Hue, Canon Printer, Cam Vrum, etc. 
+
+Another way to characterize the ports used by devices is putting them in below charts, we can quickly tell what port is used by what kind of devices. 
+
+![alt text](/output_files/plots/device_to_device_comm/images/device_to_device_comm_for_55444.jpeg)
+*On left, the remote ports communication with port 55444 and what is the name of the devices on remote port side. On the right, shows what devices are using using the source port 55444*
+
+![alt text](/output_files/plots/device_to_device_comm/images/device_to_device_comm_for_2002.jpeg)
+*On left, the remote ports communication with port 2002 and what is the name of the devices on remote port side. On the right, shows what devices are using using the source port 2002*
+
+![alt text](/output_files/plots/device_to_device_comm/images/device_to_device_comm_for_1900.jpeg)
+*On left, the remote ports communication with port 1900 and what is the name of the devices on remote port side. On the right, shows what devices are using using the source port 1900*
+
+![alt text](/output_files/plots/device_to_device_comm/images/device_to_device_comm_for_12300.jpeg)
+*On left, the remote ports communication with port 12300 and what is the name of the devices on remote port side. On the right, shows what devices are using using the source port 12300*
+
+![alt text](/output_files/plots/device_to_device_comm/images/device_to_device_comm_for_443.jpeg)
+*On left, the remote ports communication with port 443 and what is the name of the devices on remote port side. On the right, shows what devices are using using the source port 443*
+
+![alt text](/output_files/plots/device_to_device_comm/images/device_to_device_comm_for_53.jpeg)
+*On left, the remote ports communication with port 53 and what is the name of the devices on remote port side. On the right, shows what devices are using using the source port 53*
+
+![alt text](/output_files/plots/device_to_device_comm/images/device_to_device_comm_for_80.jpeg)
+*On left, the remote ports communication with port 80 and what is the name of the devices on remote port side. On the right, shows what devices are using using the source port 80*
+
+From this intial analysis, if we have buy devices to analyze their traffic, they would be Amazon devices and analyze their traffic on respective ports:
+|Device | Port (default is source port)|
+|Amazon devices: Alexas, Echo, Fire stick, Ring, etc | 55444, 55443|
+|Google devices: Gogole Home, Google Nest, Chromecast, Google WiFi, etc| 10001, 2002, 10101, 8009|
+|Philips Hue and Philiphs Hue bridge| 80, 443, 1900|
+|Printers like Samsung, Canon, Octoprint| 80|
+|Wemo smart plug| 1900, 49152|
+|Wyze camera| remote 10001|
+|Sonos devices| 12300, 443, 80|
+|Harmony Hub| 8088|
+|Ambient Weather|remote 53|
+|Dyson Fan| remote 443|
+|Dlink Camera| 80| 
+|Ubiquity AP| 443, 10001|
+|Fritz!Box| 443|
+|Sky HD| 49153|
+|Alecto IP cameras| remote 53|
+|Panasonic| remote 80|
 
 3. For external communication - we have found a lot of devices exposing ports to the Internet and these ports are getting accessed by the hosts on Internet. 
 
@@ -55,15 +108,31 @@ Below charts are breakdown of number flows remote ports contribute to a port for
 
 Most of communication on device local port 123 is with remote port 123, where as port 443, 80, 8080, and 25 are communicating with large number of different remote ports -- indicating that these connections are initiated by remote hosts on the Internet, as for TCP/UDP connection client randomly selects port to talk to the server at a fixed port.
 
+|Device | Port (default is source port)|
+|D-Link Camera| 443|
+|Synology DS and NAS| 443|
+|WD NAS | 80|
+|Space Monekey | 8080|
+|Direct TV| 8080|
+|TP link Mesh
+|Printers| 389|
+|Netgeat GS108T| 53| 
+|Vizio TV| 80|
+|Luxor devices| 80|
+|Eon smart box| 445|
+|Amazon Echo| 389|
+
+*Also, we would like to analyze why so many IoT devices are communicating on port 123/NTP to outside hosts. If these devices are accesible from outside they could be used to launch DDoS amplification attacks.
+
 For interactive graphs download the respective HTML files from the [directory](/output_files/plots/).
 
 ## Next steps
 
 For each category we plan to take these steps:
 
-1. Extact out a list of devices that have shown evidence of port scanning.
+1. Extract out a list of devices that have shown evidence of port scanning.
 
-2. Curate a list of devices using the interesting ports mentioned in result section for internal communication. Then buy them and set them up in our lab and start capturing the traffic. Once we get the traffic we can analyze the traffic on interesting ports.
+2. Refine the list of suggested deviecs in internal communication with another round of analysis. Then buy them and set them up in our lab and start capturing the traffic. Once we get the traffic we can analyze the traffic on interesting ports.
 
 3. Same as step 2.
 
